@@ -12,14 +12,14 @@
 #include "FLVHeader.h"
 #include "FLVTag.h"
 
-char *readBytesFromStream(std::ifstream &in,
-                          const size_t length) noexcept(false) {
-  char *bytes = new char[length];
+size_t readBytesFromStream(std::ifstream &in,
+                           char* bytes,
+                           const size_t length) noexcept(false) {
   in.read(bytes, sizeof(char) * length);
   if (length > in.gcount()) {
     throw std::string("Reach the end of the file");
   }
-  return bytes;
+  return in.gcount();
   // or return std::shared_ptr<char>(bytes,
   // std::unique_ptr<char>(std::default_delete<char[]>()
   //  std::make_shared<char>(bytes); is wrong!! ref:
@@ -30,7 +30,8 @@ template <class T>
 T readFromStream(std::ifstream &in, const size_t length_ = -1) noexcept(false) {
   size_t length = (length_ == -1 ? sizeof(T) : length_);
 
-  char *bytes = readBytesFromStream(in, length);
+  char *bytes = new char[length];
+  size_t read_bytes = readBytesFromStream(in, bytes, length);
   T sum = 0;
   for (int i = 0; i < length; ++i) {
     sum += ((uint8_t) * (bytes + i) << (8 * (length - i - 1)));
@@ -40,7 +41,8 @@ T readFromStream(std::ifstream &in, const size_t length_ = -1) noexcept(false) {
 }
 
 std::shared_ptr<FLVHeader> parseHeader(std::ifstream &in) {
-  char *fileType = readBytesFromStream(in, 3);
+  char *fileType = new char[3];
+  size_t read_bytes = readBytesFromStream(in, fileType, 3);
   auto version = readFromStream<int8_t>(in);
   auto info = readFromStream<int8_t>(in);
   auto length = readFromStream<int32_t>(in);
@@ -57,7 +59,8 @@ std::shared_ptr<FLVTag> parseTag(std::ifstream &in) {
     timestamp = (timestampExtended << 24) + timestamp;
   }
   auto streamId = readFromStream<uint32_t>(in, 3);
-  char *data = readBytesFromStream(in, length);
+  char *data = new char[length];
+  size_t read_bytes = readBytesFromStream(in, data, length);
 
   return std::make_shared<FLVTag>(type, length, timestamp, streamId, data);
 }
