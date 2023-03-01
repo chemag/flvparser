@@ -13,14 +13,13 @@
 #include "FLVBaseTagData.h"
 
 class FLVTag {
- private:
+ public:
   uint8_t tagType;     // 1byte
   uint32_t length;     // 3 bytes
   uint32_t timestamp;  // 3 bytes
   uint32_t streamId;   // 4 bytes
   std::shared_ptr<FLVBaseTagData> data;
 
- public:
   FLVTag(uint8_t tagType, uint32_t length, uint32_t timestamp,
          uint32_t streamId, char *data);
   FLVTag(const FLVTag &tag);
@@ -31,7 +30,7 @@ class FLVTag {
   const std::shared_ptr<FLVBaseTagData> &getData() const;
 
   std::string desc() const;
-  std::string csv() const;
+  std::string csv(int32_t timestamp_delta) const;
   std::string typeName() const;
   uint8_t getTagType() const { return tagType; };
   uint8_t getAvcPacketType() const { return data->getAvcPacketType(); };

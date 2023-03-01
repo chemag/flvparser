@@ -73,32 +73,41 @@ void FLVParser::parse() {
     std::FILE *csvfd = nullptr;
     if (csvPath != "") {
       csvfd = std::fopen(csvPath.c_str(), "wb");
-      fprintf(
-          csvfd,
-          "tag_id,frame_id,tag_type,filter,data_size,timestamp,stream_id,"
-          "audio_format,audio_rate,audio_size,audio_type,video_codec_id,"
-          "video_frame_type,video_avc_packet_type,video_composition_time\n");
+      fprintf(csvfd,
+              "tag_id,frame_id,tag_type,filter,data_size,timestamp,"
+              "timestamp_delta,stream_id,"
+              "audio_format,audio_rate,audio_size,audio_type,"
+              "video_codec_id,video_frame_type,video_avc_packet_type,"
+              "video_composition_time\n");
     }
     int video_frame = 0;
+    uint32_t video_prev_timestamp = 0;
     int audio_frame = 0;
+    uint32_t audio_prev_timestamp = 0;
     while (true) {
       try {
         auto previousTagSize = readFromStream<int32_t>(in);
         auto tag = parseTag(in);
         std::cout << "[" << ++tagIndex << "] \t" << tag->desc() << std::endl;
         if (csvfd != nullptr) {
+          int32_t timestamp_delta = 0;
           int frame_id = 0;
           if (tag->getTagType() == 8) {
             // audio
             frame_id = audio_frame++;
+            timestamp_delta = tag->timestamp - audio_prev_timestamp;
+            audio_prev_timestamp = tag->timestamp;
           } else if (tag->getTagType() == 9 && tag->getAvcPacketType() == 1) {
             // video
             frame_id = video_frame++;
+            timestamp_delta = tag->timestamp - video_prev_timestamp;
+            video_prev_timestamp = tag->timestamp;
           } else if (tag->getTagType() == 9) {
             // video
             frame_id = video_frame;
           }
-          fprintf(csvfd, "%i,%i,%s", tagIndex, frame_id, tag->csv().c_str());
+          fprintf(csvfd, "%i,%i,%s", tagIndex, frame_id,
+                  tag->csv(timestamp_delta).c_str());
         }
       } catch (std::string &error) {
         std::cout << "Exception: " << error << ", stop parsing.." << std::endl;
