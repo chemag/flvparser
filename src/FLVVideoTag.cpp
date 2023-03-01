@@ -105,7 +105,7 @@ std::string FLVVideoTag::frameTypeName() const {
     case 5:
       return "VideoInfo";
     default:
-      return "Unknown";
+      return "Unknown-" + std::to_string(frameType);
   }
 }
 
@@ -124,7 +124,7 @@ std::string FLVVideoTag::codecIdName() const {
     case 7:
       return "AVC";
     default:
-      return "Other";
+      return "Other-" + std::to_string(codecId);
   }
 }
 
@@ -137,7 +137,7 @@ std::string FLVVideoTag::AVCPacketTypeName() const {
     case 2:
       return "AVC EOS";
     default:
-      return "Invalid";
+      return "Invalid-" + std::to_string(avcPacketType);
   }
 }
 
