@@ -34,6 +34,7 @@ class FLVTag {
   std::string typeName() const;
   uint8_t getTagType() const { return tagType; };
   uint8_t getAvcPacketType() const { return data->getAvcPacketType(); };
+  uint8_t getAacPacketType() const { return data->getAacPacketType(); };
 };
 
 #endif  // TEST_FLVTAG_H

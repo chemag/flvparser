@@ -92,11 +92,13 @@ void FLVParser::parse() {
         if (csvfd != nullptr) {
           int32_t timestamp_delta = 0;
           int frame_id = 0;
-          if (tag->getTagType() == 8) {
+          if (tag->getTagType() == 8 && tag->getAacPacketType() == 1) {
             // audio
             frame_id = audio_frame++;
             timestamp_delta = tag->timestamp - audio_prev_timestamp;
             audio_prev_timestamp = tag->timestamp;
+          } else if (tag->getTagType() == 8) {
+            frame_id = audio_frame;
           } else if (tag->getTagType() == 9 && tag->getAvcPacketType() == 1) {
             // video
             frame_id = video_frame++;

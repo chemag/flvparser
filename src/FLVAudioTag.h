@@ -29,6 +29,7 @@ class FLVAudioTag : public FLVBaseTagData {
   std::string soundRateName(bool concise) const;
   std::string soundSizeName(bool concise) const;
   bool isStereo() const;
+  virtual uint8_t getAacPacketType() const { return aacPacketType; };
 };
 
 #endif  // TEST_FLVAUDIOTAG_H
