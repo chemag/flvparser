@@ -77,6 +77,7 @@ void FLVParser::parse() {
               "tag_id,frame_id,tag_type,filter,data_size,timestamp,"
               "timestamp_delta,stream_id,"
               "audio_format,audio_rate,audio_size,audio_type,"
+              "audio_aac_packet_type,"
               "video_codec_id,video_frame_type,video_avc_packet_type,"
               "video_composition_time\n");
     }

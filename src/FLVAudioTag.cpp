@@ -118,7 +118,8 @@ std::string FLVAudioTag::csv() const {
   return soundFormatName() + "," +          // SoundFormat
          soundRateName(true) + "," +        // SoundRate
          soundSizeName(true) + "," +        // SoundSize
-         (isStereo() ? "stereo" : "mono");  // SoundType
+         (isStereo() ? "stereo" : "mono") + "," +  // SoundType
+         std::to_string(aacPacketType);  // AACPacketType
 }
 
 bool FLVAudioTag::isStereo() const { return soundFlags & 0b00000001; }
