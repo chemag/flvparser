@@ -22,8 +22,13 @@ FLVVideoTag::FLVVideoTag(char *data, uint32_t length_) {
   }
 
   size_t length = length_ - (pt - data);
-  body = new char[length];
-  std::copy(pt, data + length_, body);
+  if (length > 0) {
+    body = new char[length];
+    std::copy(pt, data + length_, body);
+  } else {
+    body = nullptr;
+  }
+
   delete[] (data);
 }
 
@@ -39,7 +44,9 @@ FLVVideoTag::FLVVideoTag(const FLVVideoTag &tag) {
 
 FLVVideoTag &FLVVideoTag::operator=(const FLVVideoTag &tag) {
   if (this == &tag) {
-    delete[] (body);
+    if (body != nullptr) {
+      delete[] (body);
+    }
 
     frameType = tag.frameType;
     codecId = tag.codecId;
@@ -52,7 +59,11 @@ FLVVideoTag &FLVVideoTag::operator=(const FLVVideoTag &tag) {
   return *this;
 }
 
-FLVVideoTag::~FLVVideoTag() { delete[] (body); }
+FLVVideoTag::~FLVVideoTag() {
+  if (body != nullptr) {
+    delete[] (body);
+  }
+}
 
 std::string FLVVideoTag::desc() const {
   return "CodecId: \"" + codecIdName() + "\" " + "FrameType: \"" +
