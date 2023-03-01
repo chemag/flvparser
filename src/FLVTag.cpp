@@ -55,10 +55,6 @@ std::string FLVTag::typeName() const {
 }
 
 std::string FLVTag::desc() const {
-  std::string out_string;
-  std::stringstream ss;
-  ss << length;
-
   return "TagType: " + typeName() + " " +
          "Filter: " + std::to_string((int)((tagType & 0b00100000) >> 5)) + " " +
          "DataSize: " + std::to_string(length) + " " +
