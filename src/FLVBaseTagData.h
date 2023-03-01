@@ -12,6 +12,7 @@ class FLVBaseTagData {
   virtual ~FLVBaseTagData() {}
   virtual std::string desc() const;
   virtual std::string csv() const;
+  virtual uint8_t getAvcPacketType() const { return -1; };
 };
 
 #endif  // TEST_FLVBASETAGDATA_H

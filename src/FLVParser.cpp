@@ -92,9 +92,12 @@ void FLVParser::parse() {
           if (tag->getTagType() == 8) {
             // audio
             frame_id = audio_frame++;
-          } else if (tag->getTagType() == 9) {
+          } else if (tag->getTagType() == 9 && tag->getAvcPacketType() == 1) {
             // video
             frame_id = video_frame++;
+          } else if (tag->getTagType() == 9) {
+            // video
+            frame_id = video_frame;
           }
           fprintf(csvfd, "%i,%i,%s", tagIndex, frame_id, tag->csv().c_str());
         }
