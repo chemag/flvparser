@@ -12,8 +12,7 @@
 #include "FLVHeader.h"
 #include "FLVTag.h"
 
-size_t readBytesFromStream(std::ifstream &in,
-                           char* bytes,
+size_t readBytesFromStream(std::ifstream &in, char *bytes,
                            const size_t length) noexcept(false) {
   in.read(bytes, sizeof(char) * length);
   if (length > in.gcount()) {
