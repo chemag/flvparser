@@ -29,27 +29,28 @@ FLVVideoTag::FLVVideoTag(char *data, uint32_t length_) {
     body = nullptr;
   }
 
-/*
-  static int avc_decoder_configuration_id = 0;
-  static int avc_key_frame_id = 0;
-  if (codecId == 7) {  // AVC
-    char filename[1024] = {0};
-    if (avcPacketType == 0) {
-      // dump the AVCDecoderConfigurationRecord
-      snprintf(filename, 1024, "avc_decoder_configuration.%02i.bin", ++avc_decoder_configuration_id);
-    } else if (avcPacketType == 1 && frameType == 1) {
-      // dump key frames
-      snprintf(filename, 1024, "avc_key_frame.%02i.bin", ++avc_key_frame_id);
-    }
-    if (filename[0] != '\0') {
-      std::FILE* f = std::fopen(filename, "wb");
-      if (f) {
-        std::fwrite(body, 1, length, f);
-        std::fclose(f);
+  /*
+    static int avc_decoder_configuration_id = 0;
+    static int avc_key_frame_id = 0;
+    if (codecId == 7) {  // AVC
+      char filename[1024] = {0};
+      if (avcPacketType == 0) {
+        // dump the AVCDecoderConfigurationRecord
+        snprintf(filename, 1024, "avc_decoder_configuration.%02i.bin",
+    ++avc_decoder_configuration_id); } else if (avcPacketType == 1 && frameType
+    == 1) {
+        // dump key frames
+        snprintf(filename, 1024, "avc_key_frame.%02i.bin", ++avc_key_frame_id);
+      }
+      if (filename[0] != '\0') {
+        std::FILE* f = std::fopen(filename, "wb");
+        if (f) {
+          std::fwrite(body, 1, length, f);
+          std::fclose(f);
+        }
       }
     }
-  }
-*/
+  */
 
   delete[] (data);
 }
