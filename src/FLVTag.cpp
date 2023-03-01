@@ -50,7 +50,7 @@ std::string FLVTag::typeName() const {
     case 9:
       return "Video";
     default:
-      return "!Unknown";
+      return "Unknown-" + std::to_string(tagType & 0b00011111);
   };
 }
 
