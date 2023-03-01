@@ -88,7 +88,7 @@ std::string FLVVideoTag::desc() const {
 std::string FLVVideoTag::csv() const {
   return codecIdName() + "," +                              // CodecId
          frameTypeName() + "," +                            // FrameType
-         (codecId == 7 ? AVCPacketTypeName() : "") + "," +  // AVCPacketType
+         (codecId == 7 ? std::to_string(avcPacketType) : "") + "," +  // AVCPacketType
          compositionTimeStr();                              // CompositionTime
 }
 
