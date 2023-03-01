@@ -59,7 +59,7 @@ std::string FLVTag::desc() const {
   std::stringstream ss;
   ss << length;
 
-  return "tag: " + typeName() + " " + data->desc() + "  size:" + ss.str();
+  return "tag: " + typeName() + " " + data->desc() + " size:" + ss.str();
   //<< ": type: " << (int)(std::stringtagType &0b00011111) << std::endl
   //<< ": " << data->desc() << " size:" << length << std::endl;
   //<< " timestamp: " << timestamp

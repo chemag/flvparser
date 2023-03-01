@@ -54,16 +54,19 @@ std::string FLVAudioTag::soundFormatName() const {
     case 2:
       return "MP3";
     case 3:
-      return "Linear PCM, litter endian";
+      return "Linear PCM, little endian";
     case 4:
+      return "Nellymoser 16kHz mono";
     case 5:
+      return "Nellymoser 8kHz mono";
     case 6:
       return "Nellymoser";
     case 7:
+      return "G.711 A-law";
     case 8:
-      return "G.711";
+      return "G.711 mu-law";
     case 9:
-      return "Reserverd";
+      return "Reserved";
     case 10:
       return "AAC";
     case 11:
@@ -83,11 +86,11 @@ std::string FLVAudioTag::soundRateName() const {
     case 0:
       return "5.5kHz";
     case 1:
-      return "11 kHz";
+      return "11kHz";
     case 2:
-      return "22 kHz";
+      return "22kHz";
     case 3:
-      return "44 kHz";
+      return "44kHz";
     default:
       return "Unknow sample rate type: " + sampleRate;
   }
@@ -97,11 +100,11 @@ std::string FLVAudioTag::soundSizeName() const {
   int bitDepth = (soundFlags & 0b00000010) >> 1;
   switch (bitDepth) {
     case 0:
-      return "8-bit samples";
+      return "8-bit";
     case 1:
-      return "16-bit samples";
+      return "16-bit";
     default:
-      return "Unknow bit depth type:" + bitDepth;
+      return "Unknown bit depth type:" + bitDepth;
   }
 }
 

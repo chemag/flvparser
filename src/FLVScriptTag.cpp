@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-std::string FLVScriptTag::desc() const { return "Script Tag, nothing special"; }
+std::string FLVScriptTag::desc() const { return "unknown"; }
 
 FLVScriptTag::FLVScriptTag(char *data, uint32_t length)
     : data(data), length(length) {}
