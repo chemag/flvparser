@@ -88,17 +88,17 @@ std::string FLVVideoTag::desc() const {
 std::string FLVVideoTag::frameTypeName() const {
   switch (frameType) {
     case 1:
-      return "Key Frame";
+      return "Key";
     case 2:
-      return "Inter Frame";
+      return "Inter";
     case 3:
-      return "Disposable Inter Frame";
+      return "DisposableInter";
     case 4:
-      return "Generated Key Frame";
+      return "GeneratedKey";
     case 5:
-      return "Video info / command frame";
+      return "VideoInfo";
     default:
-      return "Unknown frame type";
+      return "Unknown";
   }
 }
 
