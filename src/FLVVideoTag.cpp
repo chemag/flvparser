@@ -12,10 +12,10 @@ FLVVideoTag::FLVVideoTag(char *data, uint32_t length_) {
     frameType = (*pt >> 4) & 0b00001111;
     codecId = *pt & 0b00001111;
     pt++;
-    if (codecId == 7) { //AVC
+    if (codecId == 7) {
+        // AVC
         avcPacketType = (uint8_t)*pt;
         pt++;
-
         compositionTime = (*pt << 16) + (*(pt+1) << 8) + *(pt+2);
         pt += 3;
     }
@@ -56,7 +56,10 @@ FLVVideoTag::~FLVVideoTag() {
 }
 
 std::string FLVVideoTag::desc() const {
-    return "Format:" + codecName() + ", " + frameTypeName();
+    return "CodecId: \"" + codecIdName() + "\" " +
+           "FrameType: \"" + frameTypeName() + "\" " +
+           (codecId == 7 ? ("AVCPacketType: \"" + AVCPacketTypeName() + "\" ") : "") + 
+           "CompositionTime: " + compositionTimeStr();
 }
 
 std::string FLVVideoTag::frameTypeName() const {
@@ -76,11 +79,42 @@ std::string FLVVideoTag::frameTypeName() const {
     }
 }
 
-std::string FLVVideoTag::codecName() const {
+std::string FLVVideoTag::codecIdName() const {
     switch (codecId) {
+        case 2:
+            return "sorenson h263";
+        case 3:
+            return "screen video";
+        case 4:
+            return "on2 vp6";
+        case 5:
+            return "on2 vp6 with alpha channel";
+        case 6:
+            return "screen video v2";
         case 7:
             return "AVC";
         default:
             return "Other";
+    }
+}
+
+std::string FLVVideoTag::AVCPacketTypeName() const {
+    switch (avcPacketType) {
+        case 0:
+            return "AVC sequence header";
+        case 1:
+            return "AVC NALU";
+        case 2:
+            return "AVC EOS";
+        default:
+            return "Invalid";
+    }
+}
+
+std::string FLVVideoTag::compositionTimeStr() const {
+    if (codecId != 7) {
+        return std::to_string(0);
+    } else {
+        return std::to_string(compositionTime);
     }
 }

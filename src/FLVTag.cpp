@@ -38,13 +38,13 @@ FLVTag::~FLVTag() {
 std::string FLVTag::typeName() const {
     switch (tagType & 0b00011111) {
         case 18:
-            return "Script Tag";
+            return "Script";
         case 8:
-            return "Audio Tag";
+            return "Audio";
         case 9:
-            return "Video Tag";
+            return "Video";
         default:
-            return "!Unknown Tag";
+            return "!Unknown";
     };
 }
 
@@ -53,12 +53,12 @@ std::string FLVTag::desc() const {
     std::stringstream ss;
     ss << length;
 
-    return typeName() + ": " + data->desc() + ", \tsize:" + ss.str();
-              //<< ": \n\ttype:" << (int)(std::stringtagType &0b00011111) << std::endl
-              //<< ": " << data->desc() << ", \tsize:" << length << std::endl;
-              //<< "\ttimestamp:" << timestamp
-              //<< "\tstreamId:" << streamId << std::endl
-              //<< "\tdetail:" << std::endl;
+    return "tag: " + typeName() + " " + data->desc() + "  size:" + ss.str();
+              //<< ": type: " << (int)(std::stringtagType &0b00011111) << std::endl
+              //<< ": " << data->desc() << " size:" << length << std::endl;
+              //<< " timestamp: " << timestamp
+              //<< " streamId: " << streamId << std::endl
+              //<< " detail: " << std::endl;
 
 }
 

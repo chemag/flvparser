@@ -107,8 +107,10 @@ std::string FLVAudioTag::soundSizeName() const {
 }
 
 std::string FLVAudioTag::desc() const {
-    return "Format:" + soundFormatName() + ", " + soundRateName() + ", " + soundSizeName()
-        + ", " + (isStereo() ? "Stereo" : "Mono");
+    return "SoundFormat: \"" + soundFormatName() + "\" " +
+           "SoundRate: \"" + soundRateName() + "\" " +
+           "SoundSize: \"" + soundSizeName() + "\" " +
+           "SoundType: \"" + (isStereo() ? "Stereo" : "Mono") + "\"";
 }
 
 bool FLVAudioTag::isStereo() const {

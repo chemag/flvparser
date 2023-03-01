@@ -42,7 +42,9 @@ public:
 
     std::string desc() const override;
     std::string frameTypeName() const;
-    std::string codecName() const;
+    std::string codecIdName() const;
+    std::string AVCPacketTypeName() const;
+    std::string compositionTimeStr() const;
 };
 
 
