@@ -59,12 +59,11 @@ std::string FLVTag::desc() const {
   std::stringstream ss;
   ss << length;
 
-  return "tag: " + typeName() + " " + data->desc() + " size:" + ss.str();
-  //<< ": type: " << (int)(std::stringtagType &0b00011111) << std::endl
-  //<< ": " << data->desc() << " size:" << length << std::endl;
-  //<< " timestamp: " << timestamp
-  //<< " streamId: " << streamId << std::endl
-  //<< " detail: " << std::endl;
+  return "TagType: " + typeName() + " " +
+         "Filter: " + std::to_string((int)((tagType & 0b00100000) >> 5)) + " " +
+         "DataSize: " + std::to_string(length) + " " +
+         "Timestamp: " + std::to_string(timestamp) + " " +
+         "StreamID: " + std::to_string(streamId) + " " + data->desc();
 }
 
 const std::shared_ptr<FLVBaseTagData> &FLVTag::getData() const { return data; }
