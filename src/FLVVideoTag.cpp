@@ -29,6 +29,18 @@ FLVVideoTag::FLVVideoTag(char *data, uint32_t length_) {
     body = nullptr;
   }
 
+/*
+#define FILENAME "/tmp/flv.videotag.avc_decoder_configuration_record.bin"
+  if (avcPacketType == 0 && codecId == 7) {
+    // dump the AVCDecoderConfigurationRecord
+    std::FILE* f = std::fopen(FILENAME, "wb");
+    if (f) {
+      std::fwrite(body, 1, length, f);
+      std::fclose(f);
+    }
+  }
+*/
+
   delete[] (data);
 }
 
