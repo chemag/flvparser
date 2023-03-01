@@ -16,7 +16,7 @@ $ cd ..
 
 (2) Run the parser in the test file:
 ```
-$ ./build/FLVParser 888888.flv  |head
+$ ./build/src/flvparser media/888888.flv |head
 FLV header:   stream info: [audio: true, video: true]
 [1]   Script Tag: Script Tag, nothing special,  size:418
 [2]   Video Tag: Format:AVC, Key Frame,   size:47
