@@ -2,6 +2,7 @@
 
 A simple FLV file parser, pure C++ implementation
 
+Forked from [FLVParser](https://github.com/XueshiQiao/FLVParser).
 
 # Instructions
 
