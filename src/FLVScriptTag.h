@@ -22,6 +22,7 @@ class FLVScriptTag : public FLVBaseTagData {
   virtual ~FLVScriptTag();
 
   std::string desc() const override;
+  std::string csv() const override;
 };
 
 #endif  // TEST_FLVSCRIPTTAG_H

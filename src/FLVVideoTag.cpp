@@ -29,17 +29,17 @@ FLVVideoTag::FLVVideoTag(char *data, uint32_t length_) {
     body = nullptr;
   }
 
-/*
-#define FILENAME "/tmp/flv.videotag.avc_decoder_configuration_record.bin"
-  if (avcPacketType == 0 && codecId == 7) {
-    // dump the AVCDecoderConfigurationRecord
-    std::FILE* f = std::fopen(FILENAME, "wb");
-    if (f) {
-      std::fwrite(body, 1, length, f);
-      std::fclose(f);
+  /*
+  #define FILENAME "/tmp/flv.videotag.avc_decoder_configuration_record.bin"
+    if (avcPacketType == 0 && codecId == 7) {
+      // dump the AVCDecoderConfigurationRecord
+      std::FILE* f = std::fopen(FILENAME, "wb");
+      if (f) {
+        std::fwrite(body, 1, length, f);
+        std::fclose(f);
+      }
     }
-  }
-*/
+  */
 
   delete[] (data);
 }
@@ -83,6 +83,13 @@ std::string FLVVideoTag::desc() const {
          (codecId == 7 ? ("AVCPacketType: \"" + AVCPacketTypeName() + "\" ")
                        : "") +
          "CompositionTime: " + compositionTimeStr();
+}
+
+std::string FLVVideoTag::csv() const {
+  return codecIdName() + "," +                              // CodecId
+         frameTypeName() + "," +                            // FrameType
+         (codecId == 7 ? AVCPacketTypeName() : "") + "," +  // AVCPacketType
+         compositionTimeStr();                              // CompositionTime
 }
 
 std::string FLVVideoTag::frameTypeName() const {

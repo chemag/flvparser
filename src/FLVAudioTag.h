@@ -24,9 +24,10 @@ class FLVAudioTag : public FLVBaseTagData {
   ~FLVAudioTag();
 
   std::string desc() const override;
+  std::string csv() const override;
   std::string soundFormatName() const;
-  std::string soundRateName() const;
-  std::string soundSizeName() const;
+  std::string soundRateName(bool concise) const;
+  std::string soundSizeName(bool concise) const;
   bool isStereo() const;
 };
 

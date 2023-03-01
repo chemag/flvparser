@@ -16,6 +16,7 @@ extern int optind;
 typedef struct arg_options {
   int debug;
   char *infile;
+  char *csvfile;
   int nrem;
   char **rem;
 } arg_options;
@@ -24,6 +25,7 @@ typedef struct arg_options {
 arg_options DEFAULTS{
     .debug = 0,
     .infile = nullptr,
+    .csvfile = nullptr,
 };
 
 void usage(char *name) {
@@ -31,6 +33,7 @@ void usage(char *name) {
   fprintf(stderr, "where options are:\n");
   fprintf(stderr, "\t-d:\t\tIncrease debug verbosity [%i]\n", DEFAULTS.debug);
   fprintf(stderr, "\t-q:\t\tZero debug verbosity\n");
+  fprintf(stderr, "\t-c <csvfile>:\t\tDump results in CSV file\n");
   fprintf(stderr, "\t-h:\t\tHelp\n");
   exit(-1);
 }
@@ -63,7 +66,7 @@ arg_options *parse_args(int argc, char **argv) {
 
   // parse arguments
   while (true) {
-    c = getopt_long(argc, argv, "dh", longopts, &optindex);
+    c = getopt_long(argc, argv, "c:dh", longopts, &optindex);
     if (c == -1) {
       break;
     }
@@ -86,6 +89,10 @@ arg_options *parse_args(int argc, char **argv) {
 
       case QUIET_OPTION:
         options.debug = 0;
+        break;
+
+      case 'c':
+        options.csvfile = optarg;
         break;
 
       case HELP_OPTION:
@@ -124,13 +131,15 @@ int main(int argc, char **argv) {
     printf("options->debug = %i\n", options->debug);
     printf("options->infile = %s\n",
            (options->infile == nullptr) ? "nullptr" : options->infile);
+    printf("options->csvfile = %s\n",
+           (options->csvfile == nullptr) ? "nullptr" : options->csvfile);
     for (int i = 0; i < options->nrem; ++i) {
       printf("options->rem[%i] = %s\n", i, options->rem[i]);
     }
   }
 
-  std::unique_ptr<FLVParser> parser =
-      std::make_unique<FLVParser>(options->infile);
+  std::unique_ptr<FLVParser> parser = std::make_unique<FLVParser>(
+      options->infile, options->csvfile != nullptr ? options->csvfile : "");
   parser->parse();
 
   return 0;

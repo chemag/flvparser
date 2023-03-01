@@ -31,7 +31,9 @@ class FLVTag {
   const std::shared_ptr<FLVBaseTagData> &getData() const;
 
   std::string desc() const;
+  std::string csv() const;
   std::string typeName() const;
+  uint8_t getTagType() const { return tagType; };
 };
 
 #endif  // TEST_FLVTAG_H

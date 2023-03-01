@@ -7,6 +7,7 @@
 #include <iostream>
 
 std::string FLVScriptTag::desc() const { return "unknown"; }
+std::string FLVScriptTag::csv() const { return ""; }
 
 FLVScriptTag::FLVScriptTag(char *data, uint32_t length)
     : data(data), length(length) {}

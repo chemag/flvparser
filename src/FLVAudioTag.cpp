@@ -76,35 +76,35 @@ std::string FLVAudioTag::soundFormatName() const {
     case 15:
       return "Device-Specific sound";
     default:
-      return "Unknown sound format " + soundFormat;
+      return "Unknown (" + std::to_string(soundFormat) + ")";
   }
 }
 
-std::string FLVAudioTag::soundRateName() const {
+std::string FLVAudioTag::soundRateName(bool concise = false) const {
   int sampleRate = (soundFlags & 0b00001100) >> 2;
   switch (sampleRate) {
     case 0:
-      return "5.5kHz";
+      return concise ? "5.5" : "5.5kHz";
     case 1:
-      return "11kHz";
+      return concise ? "11" : "11kHz";
     case 2:
-      return "22kHz";
+      return concise ? "22" : "22kHz";
     case 3:
-      return "44kHz";
+      return concise ? "44" : "44kHz";
     default:
-      return "Unknow sample rate type: " + sampleRate;
+      return "Unknown (" + std::to_string(sampleRate) + ")";
   }
 }
 
-std::string FLVAudioTag::soundSizeName() const {
+std::string FLVAudioTag::soundSizeName(bool concise = false) const {
   int bitDepth = (soundFlags & 0b00000010) >> 1;
   switch (bitDepth) {
     case 0:
-      return "8-bit";
+      return concise ? "8" : "8-bit";
     case 1:
-      return "16-bit";
+      return concise ? "16" : "16-bit";
     default:
-      return "Unknown bit depth type:" + bitDepth;
+      return "Unknown (" + std::to_string(bitDepth) + ")";
   }
 }
 
@@ -112,6 +112,13 @@ std::string FLVAudioTag::desc() const {
   return "SoundFormat: \"" + soundFormatName() + "\" " + "SoundRate: \"" +
          soundRateName() + "\" " + "SoundSize: \"" + soundSizeName() + "\" " +
          "SoundType: \"" + (isStereo() ? "Stereo" : "Mono") + "\"";
+}
+
+std::string FLVAudioTag::csv() const {
+  return soundFormatName() + "," +          // SoundFormat
+         soundRateName(true) + "," +        // SoundRate
+         soundSizeName(true) + "," +        // SoundSize
+         (isStereo() ? "stereo" : "mono");  // SoundType
 }
 
 bool FLVAudioTag::isStereo() const { return soundFlags & 0b00000001; }

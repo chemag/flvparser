@@ -10,7 +10,7 @@
 
 std::shared_ptr<FLVBaseTagData> FLVDataTagFactory::createTagDataWith(
     uint8_t type, char *data, uint32_t length) {
-  FLVBaseTagData *tagData;
+  FLVBaseTagData *tagData = nullptr;
   if (type == 18) {
     tagData = new FLVScriptTag(data, length);
   } else if (type == 8) {

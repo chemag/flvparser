@@ -11,6 +11,7 @@ class FLVBaseTagData {
  public:
   virtual ~FLVBaseTagData() {}
   virtual std::string desc() const;
+  virtual std::string csv() const;
 };
 
 #endif  // TEST_FLVBASETAGDATA_H

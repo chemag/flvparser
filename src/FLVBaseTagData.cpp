@@ -7,3 +7,4 @@
 #include <string>
 
 std::string FLVBaseTagData::desc() const {}
+std::string FLVBaseTagData::csv() const {}

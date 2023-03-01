@@ -42,6 +42,7 @@ class FLVVideoTag : public FLVBaseTagData {
   ~FLVVideoTag();
 
   std::string desc() const override;
+  std::string csv() const override;
   std::string frameTypeName() const;
   std::string codecIdName() const;
   std::string AVCPacketTypeName() const;

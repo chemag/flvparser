@@ -11,9 +11,11 @@
 class FLVParser {
  private:
   std::string filePath;
+  std::string csvPath;
 
  public:
-  FLVParser(std::string filePath) : filePath(filePath) {}
+  FLVParser(std::string filePath, std::string csvPath)
+      : filePath(filePath), csvPath(csvPath) {}
 
   ~FLVParser() {}
 
