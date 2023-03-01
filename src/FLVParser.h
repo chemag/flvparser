@@ -5,26 +5,19 @@
 #ifndef TEST_FLVPARSER_H
 #define TEST_FLVPARSER_H
 
-#include <string>
 #include <iostream>
+#include <string>
 
 class FLVParser {
-private:
-    std::string filePath;
+ private:
+  std::string filePath;
 
-public:
+ public:
+  FLVParser(std::string filePath) : filePath(filePath) {}
 
-    FLVParser(std::string filePath): filePath(filePath) {
+  ~FLVParser() {}
 
-    }
-
-    ~FLVParser() {}
-
-    void parse();
-
-
-
+  void parse();
 };
 
-
-#endif //TEST_FLVPARSER_H
+#endif  // TEST_FLVPARSER_H

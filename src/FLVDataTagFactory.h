@@ -7,13 +7,14 @@
 
 #include <cstdint>
 #include <memory>
+
 #include "FLVBaseTagData.h"
 
 class FLVDataTagFactory {
-public:
-    static std::shared_ptr<FLVBaseTagData> createTagDataWith(uint8_t type, char *data, uint32_t length);
-
+ public:
+  static std::shared_ptr<FLVBaseTagData> createTagDataWith(uint8_t type,
+                                                           char *data,
+                                                           uint32_t length);
 };
 
-
-#endif //TEST_FLVDATATAGFACTORY_H
+#endif  // TEST_FLVDATATAGFACTORY_H

@@ -8,11 +8,9 @@
 #include <string>
 
 class FLVBaseTagData {
-
-public:
-    virtual ~FLVBaseTagData() {}
-    virtual std::string desc() const;
+ public:
+  virtual ~FLVBaseTagData() {}
+  virtual std::string desc() const;
 };
 
-
-#endif //TEST_FLVBASETAGDATA_H
+#endif  // TEST_FLVBASETAGDATA_H

@@ -6,22 +6,22 @@
 #define TEST_FLVSCRIPTTAG_H
 
 #include <cstdint>
+
 #include "FLVBaseTagData.h"
 
 class FLVScriptTag : public FLVBaseTagData {
-private:
-    char *data;
-    uint32_t length;
+ private:
+  char *data;
+  uint32_t length;
 
-public:
-    FLVScriptTag(char *data, uint32_t length);
-    FLVScriptTag(const FLVScriptTag &tag);
-    FLVScriptTag &operator= (const FLVScriptTag & tag);
+ public:
+  FLVScriptTag(char *data, uint32_t length);
+  FLVScriptTag(const FLVScriptTag &tag);
+  FLVScriptTag &operator=(const FLVScriptTag &tag);
 
-    virtual ~FLVScriptTag();
+  virtual ~FLVScriptTag();
 
-    std::string desc() const override;
+  std::string desc() const override;
 };
 
-
-#endif //TEST_FLVSCRIPTTAG_H
+#endif  // TEST_FLVSCRIPTTAG_H
