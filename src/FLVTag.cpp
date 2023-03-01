@@ -59,7 +59,8 @@ std::string FLVTag::desc() const {
          "Filter: " + std::to_string((int)((tagType & 0b00100000) >> 5)) + " " +
          "DataSize: " + std::to_string(length) + " " +
          "Timestamp: " + std::to_string(timestamp) + " " +
-         "StreamID: " + std::to_string(streamId) + " " + data->desc();
+         "StreamID: " + std::to_string(streamId) +
+         ((data != nullptr) ? (" " + data->desc()) : "");
 }
 
 std::string FLVTag::csv() const {
