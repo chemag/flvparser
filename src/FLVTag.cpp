@@ -67,11 +67,11 @@ std::string FLVTag::csv(int32_t timestamp_delta) const {
   return typeName() + "," +                                          // TagType
          std::to_string((int)((tagType & 0b00100000) >> 5)) + "," +  // Filter
          std::to_string(length) + "," +                              // DataSize
-         std::to_string(timestamp) + "," +        // Timestamp
-         std::to_string(timestamp_delta) + "," +  // TimestampDelta
-         std::to_string(streamId) + "," +         // StreamID
-         (tagType == 8 ? data->csv() : ",,,,,") +  // audio fields
-         (tagType == 9 ? data->csv() : ",,,") +   // video fields
+         std::to_string(timestamp) + "," +              // Timestamp
+         std::to_string(timestamp_delta) + "," +        // TimestampDelta
+         std::to_string(streamId) + "," +               // StreamID
+         (tagType == 8 ? data->csv() : ",,,,") + "," +  // audio fields
+         (tagType == 9 ? data->csv() : ",,,,") +        // video fields
          "\n";
 }
 

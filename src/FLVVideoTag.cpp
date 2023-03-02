@@ -96,11 +96,25 @@ std::string FLVVideoTag::desc() const {
          "CompositionTime: " + compositionTimeStr();
 }
 
+std::string VideoFirstLong(const char *body) {
+  char buf[1024];
+  size_t rem = 1024;
+  int i = 0;
+  size_t bi = 0;
+  for (i = 0; i < 8; i += 1) {
+    bi += snprintf(buf + bi, rem - bi, "%02x", (unsigned char)body[i]);
+  }
+  buf[bi] = '\0';
+  return buf;
+}
+
 std::string FLVVideoTag::csv() const {
-  return codecIdName() + "," +                              // CodecId
-         frameTypeName() + "," +                            // FrameType
-         (codecId == 7 ? std::to_string(avcPacketType) : "") + "," +  // AVCPacketType
-         compositionTimeStr();                              // CompositionTime
+  return codecIdName() + "," +    // CodecId
+         frameTypeName() + "," +  // FrameType
+         (codecId == 7 ? std::to_string(avcPacketType) : "") +
+         "," +                         // AVCPacketType
+         compositionTimeStr() + "," +  // CompositionTime
+         VideoFirstLong(body);         // video first long word (64 bytes)
 }
 
 std::string FLVVideoTag::frameTypeName() const {

@@ -79,7 +79,7 @@ void FLVParser::parse() {
               "audio_format,audio_rate,audio_size,audio_type,"
               "audio_aac_packet_type,"
               "video_codec_id,video_frame_type,video_avc_packet_type,"
-              "video_composition_time\n");
+              "video_composition_time,video_first_long\n");
     }
     int video_frame = 0;
     uint32_t video_prev_timestamp = 0;
