@@ -97,6 +97,9 @@ std::string FLVVideoTag::desc() const {
 }
 
 std::string VideoFirstLong(const char *body) {
+  if (body == nullptr) {
+    return "";
+  }
   char buf[1024];
   size_t rem = 1024;
   int i = 0;
