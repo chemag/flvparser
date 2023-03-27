@@ -6,5 +6,5 @@
 
 #include <string>
 
-std::string FLVBaseTagData::desc() const {}
-std::string FLVBaseTagData::csv() const {}
+std::string FLVBaseTagData::desc() const { return ""; }
+std::string FLVBaseTagData::csv() const { return ""; }

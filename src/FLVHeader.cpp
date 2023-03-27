@@ -20,13 +20,13 @@ FLVHeader::FLVHeader(char *fileType_, int8_t version, int8_t streamInfo,
     : version(version), streamInfo(streamInfo), length(length) {
   size_t fileTypeLength = std::strlen(fileType_);
   fileType = new char[fileTypeLength + 1];
-  std::strcpy(fileType, fileType_);
+  std::strncpy(fileType, fileType_, fileTypeLength + 1);
   fileType[fileTypeLength] = '\0';
 
   if (extraData_ != nullptr) {
     size_t extraDataLength = std::strlen(extraData_);
     extraData = new char[extraDataLength + 1];
-    std::strcpy(extraData, extraData_);
+    std::strncpy(extraData, extraData_, extraDataLength + 1);
     extraData[extraDataLength] = '\0';
   } else {
     extraData = nullptr;
@@ -36,13 +36,13 @@ FLVHeader::FLVHeader(char *fileType_, int8_t version, int8_t streamInfo,
 FLVHeader::FLVHeader(const FLVHeader &header) {
   size_t fileTypeLength = std::strlen(header.fileType);
   fileType = new char[fileTypeLength + 1];
-  std::strcpy(fileType, header.fileType);
+  std::strncpy(fileType, header.fileType, fileTypeLength + 1);
   fileType[fileTypeLength] = '\0';
 
   if (header.extraData != nullptr) {
     size_t extraDataLength = std::strlen(header.extraData);
     extraData = new char[extraDataLength + 1];
-    std::strcpy(extraData, header.extraData);
+    std::strncpy(extraData, header.extraData, extraDataLength + 1);
     extraData[extraDataLength] = '\0';
   } else {
     extraData = nullptr;
@@ -60,7 +60,7 @@ FLVHeader &FLVHeader::operator=(const FLVHeader &header) {
 
     size_t fileTypeLength = std::strlen(header.fileType);
     fileType = new char[fileTypeLength + 1];
-    std::strcpy(fileType, header.fileType);
+    std::strncpy(fileType, header.fileType, fileTypeLength + 1);
     fileType[fileTypeLength] = '\0';
 
     if (header.extraData == nullptr) {
@@ -68,7 +68,7 @@ FLVHeader &FLVHeader::operator=(const FLVHeader &header) {
     } else {
       size_t extraDataLength = std::strlen(header.extraData);
       extraData = new char[extraDataLength + 1];
-      std::strcpy(extraData, header.extraData);
+      std::strncpy(extraData, header.extraData, extraDataLength + 1);
       extraData[extraDataLength] = '\0';
     }
 

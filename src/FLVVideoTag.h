@@ -47,7 +47,7 @@ class FLVVideoTag : public FLVBaseTagData {
   std::string codecIdName() const;
   std::string AVCPacketTypeName() const;
   std::string compositionTimeStr() const;
-  virtual uint8_t getAvcPacketType() const { return avcPacketType; };
+  virtual uint8_t getAvcPacketType() const override { return avcPacketType; };
 };
 
 #endif  // TEST_FLVVIDEOTAG_H
