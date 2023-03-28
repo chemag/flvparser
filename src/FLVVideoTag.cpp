@@ -64,6 +64,22 @@ std::string AVCGetFramerate(
   return string_format("%f", framerate);
 }
 
+std::string AVCGetSpsPicOrderCntType(
+    h264nal::H264NalUnitParser::NalUnitState &nal_unit) {
+  if (nal_unit.nal_unit_payload == nullptr) {
+    return "";
+  }
+  if (nal_unit.nal_unit_payload->sps == nullptr) {
+    return "";
+  }
+  if (nal_unit.nal_unit_payload->sps->sps_data == nullptr) {
+    return "";
+  }
+  int pic_order_cnt_type =
+      nal_unit.nal_unit_payload->sps->sps_data->pic_order_cnt_type;
+  return string_format("%i", pic_order_cnt_type);
+}
+
 std::string AVCGetSliceHeaderFrameNum(
     h264nal::H264NalUnitParser::NalUnitState &nal_unit) {
   if (nal_unit.nal_unit_payload == nullptr) {
@@ -108,6 +124,7 @@ FLVVideoTag::FLVVideoTag(char *data, uint32_t length_) {
 
   resolution = "";
   framerate = "";
+  pic_order_cnt_type = "";
   frame_num = "";
 
   if (body != nullptr && codecId == 7 /* AVC */ &&
@@ -138,6 +155,7 @@ FLVVideoTag::FLVVideoTag(char *data, uint32_t length_) {
       if (nal_unit->nal_unit_header->nal_unit_type == 7) {  // SPS
         resolution = AVCGetResolution(*nal_unit);
         framerate = AVCGetFramerate(*nal_unit);
+        pic_order_cnt_type = AVCGetSpsPicOrderCntType(*nal_unit);
       } else if (nal_unit->nal_unit_header->nal_unit_type == 1 ||
                  nal_unit->nal_unit_header->nal_unit_type ==
                      5) {  // slice_header
@@ -243,9 +261,9 @@ std::string VideoFirstLong(const char *body) {
 
 std::vector<std::string> FLVVideoTag::csv_headers() {
   std::vector<std::string> out = {
-      "video_codec_id",         "video_frame_type", "video_avc_packet_type",
-      "video_composition_time", "video_resolution", "video_framerate",
-      "video_frame_num",        "video_first_long",
+      "video_codec_id",           "video_frame_type", "video_avc_packet_type",
+      "video_composition_time",   "video_resolution", "video_framerate",
+      "video_pic_order_cnt_type", "video_frame_num",  "video_first_long",
   };
   return out;
 }
@@ -258,6 +276,7 @@ std::string FLVVideoTag::csv() const {
          compositionTimeStr() + "," +  // CompositionTime
          resolution + "," +            // resolution
          framerate + "," +             // framerate
+         pic_order_cnt_type + "," +    // pic_order_cnt_type
          frame_num + "," +             // frame_num
          VideoFirstLong(body);         // video first long word (64 bytes)
 }
