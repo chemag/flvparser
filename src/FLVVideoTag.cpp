@@ -73,6 +73,7 @@ FLVVideoTag::FLVVideoTag(char *data, uint32_t length_) {
     // create state for parsing NALUs
     // bitstream parser state (to keep the SPS/PPS/SubsetSPS NALUs)
     static h264nal::H264BitstreamParserState bitstream_parser_state;
+    static h264nal::ParsingOptions parsing_options;
 
     // get the indices for the NALUs in the stream. This is needed
     // because we will read Annex-B files, i.e., a bunch of appended NALUs
@@ -90,7 +91,7 @@ FLVVideoTag::FLVVideoTag(char *data, uint32_t length_) {
       // boxes), the right function is `ParseNalUnitUnescaped()`.
       auto nal_unit = h264nal::H264NalUnitParser::ParseNalUnit(
           data+nalu_index.payload_start_offset, nalu_index.payload_size,
-          &bitstream_parser_state, true /* add_checksum */);
+          &bitstream_parser_state, parsing_options);
       if (nal_unit->nal_unit_header->nal_unit_type == 7) {  // PPS
         resolution = AVCGetResolution(*nal_unit);
       }
