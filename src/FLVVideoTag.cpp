@@ -4,32 +4,33 @@
 
 #include "FLVVideoTag.h"
 
+#include <h264_bitstream_parser.h>
+#include <h264_common.h>
+
 #include <algorithm>
 #include <cstring>
 #include <iostream>
 #include <vector>
 
-#include <h264_bitstream_parser.h>
-#include <h264_common.h>
-
 namespace {
 
 // https://stackoverflow.com/a/26221725
-template<typename ... Args>
-std::string string_format( const std::string& format, Args ... args) {
+template <typename... Args>
+std::string string_format(const std::string &format, Args... args) {
   // Extra space for '\0'
-  int size_s = std::snprintf( nullptr, 0, format.c_str(), args ...) + 1;
+  int size_s = std::snprintf(nullptr, 0, format.c_str(), args...) + 1;
   if (size_s <= 0) {
-    throw std::runtime_error( "Error during formatting." );
+    throw std::runtime_error("Error during formatting.");
   }
-  auto size = static_cast<size_t>( size_s );
-  std::unique_ptr<char[]> buf( new char[ size ] );
-  std::snprintf( buf.get(), size, format.c_str(), args ...);
+  auto size = static_cast<size_t>(size_s);
+  std::unique_ptr<char[]> buf(new char[size]);
+  std::snprintf(buf.get(), size, format.c_str(), args...);
   // We do not want the '\0' inside
-  return std::string( buf.get(), buf.get() + size - 1 );
+  return std::string(buf.get(), buf.get() + size - 1);
 }
 
-std::string AVCGetResolution(h264nal::H264NalUnitParser::NalUnitState& nal_unit) {
+std::string AVCGetResolution(
+    h264nal::H264NalUnitParser::NalUnitState &nal_unit) {
   if (nal_unit.nal_unit_payload == nullptr) {
     return "";
   }
@@ -44,7 +45,8 @@ std::string AVCGetResolution(h264nal::H264NalUnitParser::NalUnitState& nal_unit)
   return string_format("%ix%i", width, height);
 }
 
-std::string AVCGetFramerate(h264nal::H264NalUnitParser::NalUnitState& nal_unit) {
+std::string AVCGetFramerate(
+    h264nal::H264NalUnitParser::NalUnitState &nal_unit) {
   if (nal_unit.nal_unit_payload == nullptr) {
     return "";
   }
@@ -57,12 +59,12 @@ std::string AVCGetFramerate(h264nal::H264NalUnitParser::NalUnitState& nal_unit) 
   if (nal_unit.nal_unit_payload->sps->sps_data->vui_parameters == nullptr) {
     return "";
   }
-  float framerate = nal_unit.nal_unit_payload->sps->sps_data->vui_parameters->getFramerate();
+  float framerate =
+      nal_unit.nal_unit_payload->sps->sps_data->vui_parameters->getFramerate();
   return string_format("%f", framerate);
 }
 
 }  // namespace
-
 
 FLVVideoTag::FLVVideoTag(char *data, uint32_t length_) {
   char *pt = data;
@@ -88,7 +90,8 @@ FLVVideoTag::FLVVideoTag(char *data, uint32_t length_) {
   resolution = "";
   framerate = "";
 
-  if (body != nullptr && codecId == 7 /* AVC */ && avcPacketType == 1 /* AVC NALU */) {
+  if (body != nullptr && codecId == 7 /* AVC */ &&
+      avcPacketType == 1 /* AVC NALU */) {
     // create state for parsing NALUs
     // bitstream parser state (to keep the SPS/PPS/SubsetSPS NALUs)
     static h264nal::H264BitstreamParserState bitstream_parser_state;
@@ -99,7 +102,8 @@ FLVVideoTag::FLVVideoTag(char *data, uint32_t length_) {
     // with escape sequences used to separate them.
     uint8_t *data = (uint8_t *)body;
     auto nalu_indices =
-      h264nal::H264BitstreamParser::FindNaluIndicesExplicitFraming(data, length);
+        h264nal::H264BitstreamParser::FindNaluIndicesExplicitFraming(data,
+                                                                     length);
 
     printf("nalu_indices: %zu\n", nalu_indices.size());
 
@@ -109,23 +113,24 @@ FLVVideoTag::FLVVideoTag(char *data, uint32_t length_) {
       // one with an explicit NALU length mechanism (like mp4 mdat
       // boxes), the right function is `ParseNalUnitUnescaped()`.
       auto nal_unit = h264nal::H264NalUnitParser::ParseNalUnit(
-          data+nalu_index.payload_start_offset, nalu_index.payload_size,
+          data + nalu_index.payload_start_offset, nalu_index.payload_size,
           &bitstream_parser_state, parsing_options);
       if (nal_unit->nal_unit_header->nal_unit_type == 7) {  // PPS
         resolution = AVCGetResolution(*nal_unit);
         framerate = AVCGetFramerate(*nal_unit);
       }
-/*
-      printf(
-          "nal_unit { offset: %lu length: %lu parsed_length: %lu checksum: 0x%s "
-          "} nal_unit_header { forbidden_zero_bit: %i nal_ref_idc: %i "
-          "nal_unit_type: %i }\n",
-          nal_unit->offset, nal_unit->length, nal_unit->parsed_length,
-          nal_unit->checksum->GetPrintableChecksum(),
-          nal_unit->nal_unit_header->forbidden_zero_bit,
-          nal_unit->nal_unit_header->nal_ref_idc,
-          nal_unit->nal_unit_header->nal_unit_type);
-*/
+      /*
+            printf(
+                "nal_unit { offset: %lu length: %lu parsed_length: %lu checksum:
+         0x%s "
+                "} nal_unit_header { forbidden_zero_bit: %i nal_ref_idc: %i "
+                "nal_unit_type: %i }\n",
+                nal_unit->offset, nal_unit->length, nal_unit->parsed_length,
+                nal_unit->checksum->GetPrintableChecksum(),
+                nal_unit->nal_unit_header->forbidden_zero_bit,
+                nal_unit->nal_unit_header->nal_ref_idc,
+                nal_unit->nal_unit_header->nal_unit_type);
+      */
     }
   }
 
@@ -213,13 +218,9 @@ std::string VideoFirstLong(const char *body) {
 
 std::vector<std::string> FLVVideoTag::csv_headers() {
   std::vector<std::string> out = {
-    "video_codec_id",
-    "video_frame_type",
-    "video_avc_packet_type",
-    "video_composition_time",
-    "video_resolution",
-    "video_framerate",
-    "video_first_long",
+      "video_codec_id",         "video_frame_type", "video_avc_packet_type",
+      "video_composition_time", "video_resolution", "video_framerate",
+      "video_first_long",
   };
   return out;
 }
@@ -230,8 +231,8 @@ std::string FLVVideoTag::csv() const {
          (codecId == 7 ? std::to_string(avcPacketType) : "") +
          "," +                         // AVCPacketType
          compositionTimeStr() + "," +  // CompositionTime
-         resolution + "," + // resolution
-         framerate + "," + // framerate
+         resolution + "," +            // resolution
+         framerate + "," +             // framerate
          VideoFirstLong(body);         // video first long word (64 bytes)
 }
 

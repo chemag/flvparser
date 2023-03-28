@@ -117,11 +117,8 @@ std::string FLVAudioTag::desc() const {
 
 std::vector<std::string> FLVAudioTag::csv_headers() {
   std::vector<std::string> out = {
-    "audio_format",
-    "audio_rate",
-    "audio_size",
-    "audio_type",
-    "audio_aac_packet_type",
+      "audio_format",          "audio_rate", "audio_size", "audio_type",
+      "audio_aac_packet_type",
   };
   return out;
 }

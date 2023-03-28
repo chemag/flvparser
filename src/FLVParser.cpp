@@ -10,9 +10,9 @@
 #include <memory>
 #include <vector>
 
+#include "FLVAudioTag.h"
 #include "FLVHeader.h"
 #include "FLVTag.h"
-#include "FLVAudioTag.h"
 #include "FLVVideoTag.h"
 
 size_t readBytesFromStream(std::ifstream &in, char *bytes,
@@ -34,7 +34,7 @@ T readFromStream(std::ifstream &in, const size_t length_ = -1) noexcept(false) {
 
   char *bytes = new char[length];
   size_t _read_bytes = readBytesFromStream(in, bytes, length);
-  (void) _read_bytes;
+  (void)_read_bytes;
   T sum = 0;
   for (int i = 0; i < length; ++i) {
     sum += ((uint8_t) * (bytes + i) << (8 * (length - i - 1)));
@@ -46,7 +46,7 @@ T readFromStream(std::ifstream &in, const size_t length_ = -1) noexcept(false) {
 std::shared_ptr<FLVHeader> parseHeader(std::ifstream &in) {
   char *fileType = new char[3];
   size_t _read_bytes = readBytesFromStream(in, fileType, 3);
-  (void) _read_bytes;
+  (void)_read_bytes;
   auto version = readFromStream<int8_t>(in);
   auto info = readFromStream<int8_t>(in);
   auto length = readFromStream<int32_t>(in);
@@ -65,7 +65,7 @@ std::shared_ptr<FLVTag> parseTag(std::ifstream &in) {
   auto streamId = readFromStream<uint32_t>(in, 3);
   char *data = new char[length];
   size_t _read_bytes = readBytesFromStream(in, data, length);
-  (void) _read_bytes;
+  (void)_read_bytes;
 
   return std::make_shared<FLVTag>(type, length, timestamp, streamId, data);
 }
@@ -73,7 +73,7 @@ std::shared_ptr<FLVTag> parseTag(std::ifstream &in) {
 namespace {
 std::string vector_join(std::vector<std::string> v) {
   std::stringstream ss;
-  for (const auto& s : v) {
+  for (const auto &s : v) {
     ss << s << ",";
   }
   return ss.str();
@@ -107,7 +107,7 @@ void FLVParser::parse() {
     while (true) {
       try {
         auto previousTagSize = readFromStream<int32_t>(in);
-        (void) previousTagSize;
+        (void)previousTagSize;
         auto tag = parseTag(in);
         std::cout << "[" << ++tagIndex << "] \t" << tag->desc() << std::endl;
         if (csvfd != nullptr) {
