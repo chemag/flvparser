@@ -36,6 +36,7 @@ class FLVVideoTag : public FLVBaseTagData {
   char *body;
   uint32_t bodyLength;
   std::string resolution;
+  std::string framerate;
 
  public:
   FLVVideoTag(char *data, uint32_t length);

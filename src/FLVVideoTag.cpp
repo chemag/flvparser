@@ -44,6 +44,23 @@ std::string AVCGetResolution(h264nal::H264NalUnitParser::NalUnitState& nal_unit)
   return string_format("%ix%i", width, height);
 }
 
+std::string AVCGetFramerate(h264nal::H264NalUnitParser::NalUnitState& nal_unit) {
+  if (nal_unit.nal_unit_payload == nullptr) {
+    return "";
+  }
+  if (nal_unit.nal_unit_payload->sps == nullptr) {
+    return "";
+  }
+  if (nal_unit.nal_unit_payload->sps->sps_data == nullptr) {
+    return "";
+  }
+  if (nal_unit.nal_unit_payload->sps->sps_data->vui_parameters == nullptr) {
+    return "";
+  }
+  float framerate = nal_unit.nal_unit_payload->sps->sps_data->vui_parameters->getFramerate();
+  return string_format("%f", framerate);
+}
+
 }  // namespace
 
 
@@ -69,6 +86,7 @@ FLVVideoTag::FLVVideoTag(char *data, uint32_t length_) {
   }
 
   resolution = "";
+  framerate = "";
 
   if (body != nullptr && codecId == 7 /* AVC */ && avcPacketType == 1 /* AVC NALU */) {
     // create state for parsing NALUs
@@ -95,6 +113,7 @@ FLVVideoTag::FLVVideoTag(char *data, uint32_t length_) {
           &bitstream_parser_state, parsing_options);
       if (nal_unit->nal_unit_header->nal_unit_type == 7) {  // PPS
         resolution = AVCGetResolution(*nal_unit);
+        framerate = AVCGetFramerate(*nal_unit);
       }
 /*
       printf(
@@ -199,6 +218,7 @@ std::vector<std::string> FLVVideoTag::csv_headers() {
     "video_avc_packet_type",
     "video_composition_time",
     "video_resolution",
+    "video_framerate",
     "video_first_long",
   };
   return out;
@@ -211,6 +231,7 @@ std::string FLVVideoTag::csv() const {
          "," +                         // AVCPacketType
          compositionTimeStr() + "," +  // CompositionTime
          resolution + "," + // resolution
+         framerate + "," + // framerate
          VideoFirstLong(body);         // video first long word (64 bytes)
 }
 
