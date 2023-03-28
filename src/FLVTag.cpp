@@ -6,8 +6,12 @@
 
 #include <iomanip>
 #include <iostream>
+#include <string>
+#include <vector>
 
+#include "FLVAudioTag.h"
 #include "FLVDataTagFactory.h"
+#include "FLVVideoTag.h"
 
 FLVTag::FLVTag(uint8_t tagType, uint32_t length, uint32_t timestamp,
                uint32_t streamId, char *data)
@@ -63,15 +67,23 @@ std::string FLVTag::desc() const {
          ((data != nullptr) ? (" " + data->desc()) : "");
 }
 
+namespace {
+std::string getDefaultValue(std::vector<std::string> v) {
+  return std::string(v.size() - 1, ',');
+}
+} // namespace
+
 std::string FLVTag::csv(int32_t timestamp_delta) const {
+  static std::string default_audio_str = getDefaultValue(FLVAudioTag::csv_headers());
+  static std::string default_video_str = getDefaultValue(FLVVideoTag::csv_headers());
   return typeName() + "," +                                          // TagType
          std::to_string((int)((tagType & 0b00100000) >> 5)) + "," +  // Filter
          std::to_string(length) + "," +                              // DataSize
          std::to_string(timestamp) + "," +              // Timestamp
          std::to_string(timestamp_delta) + "," +        // TimestampDelta
          std::to_string(streamId) + "," +               // StreamID
-         (tagType == 8 ? data->csv() : ",,,,") + "," +  // audio fields
-         (tagType == 9 ? data->csv() : ",,,,,") +       // video fields
+         (tagType == 8 ? data->csv() : default_audio_str) + "," +  // audio fields
+         (tagType == 9 ? data->csv() : default_video_str) +       // video fields
          "\n";
 }
 

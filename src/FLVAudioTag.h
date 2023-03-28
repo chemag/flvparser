@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
 
 #include "FLVBaseTagData.h"
 
@@ -24,6 +25,7 @@ class FLVAudioTag : public FLVBaseTagData {
   ~FLVAudioTag();
 
   std::string desc() const override;
+  static std::vector<std::string> csv_headers();
   std::string csv() const override;
   std::string soundFormatName() const;
   std::string soundRateName(bool concise) const;

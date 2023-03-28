@@ -8,9 +8,12 @@
 #include <iomanip>
 #include <iostream>
 #include <memory>
+#include <vector>
 
 #include "FLVHeader.h"
 #include "FLVTag.h"
+#include "FLVAudioTag.h"
+#include "FLVVideoTag.h"
 
 size_t readBytesFromStream(std::ifstream &in, char *bytes,
                            const size_t length) noexcept(false) {
@@ -67,6 +70,16 @@ std::shared_ptr<FLVTag> parseTag(std::ifstream &in) {
   return std::make_shared<FLVTag>(type, length, timestamp, streamId, data);
 }
 
+namespace {
+std::string vector_join(std::vector<std::string> v) {
+  std::stringstream ss;
+  for (const auto& s : v) {
+    ss << s << ",";
+  }
+  return ss.str();
+}
+}  // namespace
+
 void FLVParser::parse() {
   std::ifstream in(filePath, std::ios::binary);
   if (in.is_open()) {
@@ -76,13 +89,16 @@ void FLVParser::parse() {
     std::FILE *csvfd = nullptr;
     if (csvPath != "") {
       csvfd = std::fopen(csvPath.c_str(), "wb");
+      std::string sv = vector_join(FLVVideoTag::csv_headers());
+      std::string sa = vector_join(FLVAudioTag::csv_headers());
       fprintf(csvfd,
               "tag_id,frame_id,tag_type,filter,data_size,timestamp,"
-              "timestamp_delta,stream_id,"
-              "audio_format,audio_rate,audio_size,audio_type,"
-              "audio_aac_packet_type,"
-              "video_codec_id,video_frame_type,video_avc_packet_type,"
-              "video_composition_time,video_resolution,video_first_long\n");
+              "timestamp_delta,stream_id,");
+      fprintf(csvfd, "%s", sa.c_str());
+      // remove the last comma in the video string list
+      sv.pop_back();
+      fprintf(csvfd, "%s", sv.c_str());
+      fprintf(csvfd, "\n");
     }
     int video_frame = 0;
     uint32_t video_prev_timestamp = 0;

@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <cstring>
 #include <iostream>
+#include <vector>
 
 #include <h264_bitstream_parser.h>
 #include <h264_common.h>
@@ -189,6 +190,18 @@ std::string VideoFirstLong(const char *body) {
   }
   buf[bi] = '\0';
   return buf;
+}
+
+std::vector<std::string> FLVVideoTag::csv_headers() {
+  std::vector<std::string> out = {
+    "video_codec_id",
+    "video_frame_type",
+    "video_avc_packet_type",
+    "video_composition_time",
+    "video_resolution",
+    "video_first_long",
+  };
+  return out;
 }
 
 std::string FLVVideoTag::csv() const {

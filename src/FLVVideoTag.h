@@ -6,6 +6,7 @@
 #define TEST_FLVVIDEOTAG_H
 
 #include <cstdint>
+#include <vector>
 
 #include "FLVBaseTagData.h"
 
@@ -43,6 +44,7 @@ class FLVVideoTag : public FLVBaseTagData {
   ~FLVVideoTag();
 
   std::string desc() const override;
+  static std::vector<std::string> csv_headers();
   std::string csv() const override;
   std::string frameTypeName() const;
   std::string codecIdName() const;

@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <vector>
 
 FLVAudioTag::FLVAudioTag(char *data, uint32_t length_) {
   char *pt = data;
@@ -112,6 +113,17 @@ std::string FLVAudioTag::desc() const {
   return "SoundFormat: \"" + soundFormatName() + "\" " + "SoundRate: \"" +
          soundRateName() + "\" " + "SoundSize: \"" + soundSizeName() + "\" " +
          "SoundType: \"" + (isStereo() ? "Stereo" : "Mono") + "\"";
+}
+
+std::vector<std::string> FLVAudioTag::csv_headers() {
+  std::vector<std::string> out = {
+    "audio_format",
+    "audio_rate",
+    "audio_size",
+    "audio_type",
+    "audio_aac_packet_type",
+  };
+  return out;
 }
 
 std::string FLVAudioTag::csv() const {
