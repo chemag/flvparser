@@ -64,6 +64,25 @@ std::string AVCGetFramerate(
   return string_format("%f", framerate);
 }
 
+std::string AVCGetSliceHeaderFrameNum(
+    h264nal::H264NalUnitParser::NalUnitState &nal_unit) {
+  if (nal_unit.nal_unit_payload == nullptr) {
+    return "";
+  }
+  if (nal_unit.nal_unit_payload->slice_layer_without_partitioning_rbsp ==
+      nullptr) {
+    return "";
+  }
+  if (nal_unit.nal_unit_payload->slice_layer_without_partitioning_rbsp
+          ->slice_header == nullptr) {
+    return "";
+  }
+  int frame_num =
+      nal_unit.nal_unit_payload->slice_layer_without_partitioning_rbsp
+          ->slice_header->frame_num;
+  return string_format("%i", frame_num);
+}
+
 }  // namespace
 
 FLVVideoTag::FLVVideoTag(char *data, uint32_t length_) {
@@ -89,6 +108,7 @@ FLVVideoTag::FLVVideoTag(char *data, uint32_t length_) {
 
   resolution = "";
   framerate = "";
+  frame_num = "";
 
   if (body != nullptr && codecId == 7 /* AVC */ &&
       avcPacketType == 1 /* AVC NALU */) {
@@ -115,10 +135,15 @@ FLVVideoTag::FLVVideoTag(char *data, uint32_t length_) {
       auto nal_unit = h264nal::H264NalUnitParser::ParseNalUnit(
           data + nalu_index.payload_start_offset, nalu_index.payload_size,
           &bitstream_parser_state, parsing_options);
-      if (nal_unit->nal_unit_header->nal_unit_type == 7) {  // PPS
+      if (nal_unit->nal_unit_header->nal_unit_type == 7) {  // SPS
         resolution = AVCGetResolution(*nal_unit);
         framerate = AVCGetFramerate(*nal_unit);
+      } else if (nal_unit->nal_unit_header->nal_unit_type == 1 ||
+                 nal_unit->nal_unit_header->nal_unit_type ==
+                     5) {  // slice_header
+        frame_num = AVCGetSliceHeaderFrameNum(*nal_unit);
       }
+
       /*
             printf(
                 "nal_unit { offset: %lu length: %lu parsed_length: %lu checksum:
@@ -220,7 +245,7 @@ std::vector<std::string> FLVVideoTag::csv_headers() {
   std::vector<std::string> out = {
       "video_codec_id",         "video_frame_type", "video_avc_packet_type",
       "video_composition_time", "video_resolution", "video_framerate",
-      "video_first_long",
+      "video_frame_num",        "video_first_long",
   };
   return out;
 }
@@ -233,6 +258,7 @@ std::string FLVVideoTag::csv() const {
          compositionTimeStr() + "," +  // CompositionTime
          resolution + "," +            // resolution
          framerate + "," +             // framerate
+         frame_num + "," +             // frame_num
          VideoFirstLong(body);         // video first long word (64 bytes)
 }
 
